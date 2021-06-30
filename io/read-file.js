@@ -20,9 +20,14 @@ fs.promises
   .catch(err => console.error(err))
 
 const readFileAsync = async (folder, textFile) => {
-  const buffer = await fs.promises.readFile(path.resolve(folder, textFile))
-  const file = await buffer.toString()
-  return file
+  try {
+    const buffer = await fs.promises.readFile(path.resolve(folder, textFile))
+    const file = await buffer.toString()
+    return file
+  } catch (err) {
+    console.log("Ohh noo")
+    console.error(err.message)
+  }
 }
 
 ;(async () => {
