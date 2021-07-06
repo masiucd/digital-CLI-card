@@ -83,3 +83,32 @@ if (process.argv[process.argv.length - 1] === "make") {
 
 We will create a new directory named `static`, note that we are using `es-modules here`.
 To create the directory run the script in tou terminal `node server.js make`.
+
+We can even pont to different directories, for example in a express application we can use `__dirname` to point to a public directory that will contain different static files.
+
+```js
+express.static(path.join(__dirname, "public"))
+```
+
+or with `es-modules``
+
+```js
+import path from "path"
+import {fileURLToPath} from "url"
+const __filename = fileURLToPath(import.meta.url)
+express.static(path.join(path.dirname(__filename), "static"))
+```
+
+lastly we can create new files
+
+```js
+import fs from "fs"
+
+const init = () => {
+  fs.writeFileSync("index.js", "Hello World")
+}
+
+if (process.argv[process.argv.length - 1] === "make") {
+  init()
+}
+```
