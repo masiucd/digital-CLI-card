@@ -1,7 +1,9 @@
 # Node Js land
 
 - [About](#about)
-- [dirname](#dirname)
+- [Directory name](#dirname)
+- [Exit](#exit)
+- [Resources](#resources)
 
 ## [About](#about)
 
@@ -21,11 +23,13 @@ When it come to compellation,
 
 `JavaScript` is generally considered an interpreted language, but modern `JavaScript` engines no longer just interpret `JavaScript`, they compile it.
 
-This has been happening since 2009, SpiderMonkey introduced this idea and since then all `JavaScript` engines has jumped on the train.
+This has been happening since 2009, SpiderMonkey introduced this idea and since then all `JavaScript` engines has jumped on the train
 This is one reason why you may hear that `JavaScript` is no longer a regular `scripting` language since `v8` and compile thousands of `javaScript` code into machine code.
 `JavaScript` has transformed from a slow scripting language that could only run a few lines of code at the time to be a really powerful and preferment programing language.
 
-## [Dirname](#dirname)
+---
+
+## [Directory name](#dirname)
 
 `__dirname` is a environment variable that tells us the absolute path of the file we currently working in.
 
@@ -122,3 +126,51 @@ if (process.argv[process.argv.length - 1] === "make") {
   init()
 }
 ```
+
+---
+
+## [Exit](#exit)
+
+Exiting from a Node program is important to know. When we run Node in the console we usually use `ctr+c`, but in a program we ned some way to shut down the program for special reasons.
+We can access the `process` core module which has some handy methods and functionality.
+We can exit from a Node.js program using `process.exit(1)`.
+When Node.js runs this line, the process is immediately forced to terminate.
+
+This means that any callback that's pending, any network request still being sent, any filesystem access, or processes writing to stdout or stderr - all is going to be ungracefully terminated right away.
+
+The exit method receives one argument, a number. By default it receives `0` which means success.
+Read more on exit codes at [Exit codes](https://nodejs.org/api/process.html#process_exit_codes)
+
+_This is a simple `Node Express` application_
+
+```js
+import express from "express"
+
+const app = express()
+
+const PORT = process.env.PORT || 8080
+
+app.get("/", (req, res) => {
+  res.send("Welcome")
+})
+
+const server = app.listen(PORT, () => console.log(`server listening on port ${PORT}`))
+
+process.on("SIGTERM", () => {
+  server.close(() => {
+    console.log("Process has been shut down")
+  })
+})
+```
+
+If we would use `process.exit()` here we would not be able to shut down the process.
+Instead we use the `process.on()` method here to terminate the request when we are done.
+
+> `SIGTERM` is the signal that tells a process to gracefully terminate. It is one of many different signals that are sent from process managers like upstart for example.
+
+---
+
+## [Resources](#resources)
+
+- [Nodejs.dev](https://nodejs.dev/)
+- [Nodejs.org](https://nodejs.org/en/)
