@@ -15,7 +15,7 @@ server.listen(5000, () => console.log("server has started"))
 
 /**
  * run node app.js
- * in another tab from the terminal write = ➜ nc localhost 5000
+ * in another tab from the terminal write = (if you are on a MAC ➜ nc localhost 5000) else try (telnet localhost 5000)
  * and print  a message
  * got to the first tab to view the message
  */

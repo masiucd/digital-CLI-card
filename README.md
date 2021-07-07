@@ -7,13 +7,23 @@
 
 ### What is Node Js?
 
-Node Js is a runtime environment for javascript so we can run our javascript on the server and not just in the browser.
+Node Js is a runtime environment for `JavaScript` so we can run our `JavaScript` on the server and not just in the browser.
 Node Js runs on Google chrome V8 engine, this is one reason why Node JS i very fast and preferment.
 Node Js runs on a single process, without creating a new thread for every request.
 
 When Node make a `IO` operation like accessing data from a database ,reading from a network or the file system, Node will not block the thread.
 Instead Node will continue with the operation when the response comes back. This saves some valuable `CPU` cycles
 With this approach Node can handle a lot of concurrent connections with a single server without instead of nasty complicated thread concurrency.
+
+`V8` is the `JavaScript` engine that power Google chrome, it also the engine that runs on `Node`.
+`V8` is written in `C++
+When it come to compellation,
+
+`JavaScript` is generally considered an interpreted language, but modern `JavaScript` engines no longer just interpret `JavaScript`, they compile it.
+
+This has been happening since 2009, SpiderMonkey introduced this idea and since then all `JavaScript` engines has jumped on the train.
+This is one reason why you may hear that `JavaScript` is no longer a regular `scripting` language since `v8` and compile thousands of `javaScript` code into machine code.
+`JavaScript` has transformed from a slow scripting language that could only run a few lines of code at the time to be a really powerful and preferment programing language.
 
 ## [Dirname](#dirname)
 
