@@ -1,14 +1,17 @@
 #! /usr/bin/env node
 import minimist from "minimist"
+import path from "path"
+import {fileURLToPath} from "url"
+import fs from "fs"
+const __dirname = fileURLToPath(import.meta.url)
 
 // *********************
 
 function yoHelp() {
-  console.log("ex1 usage:")
-  console.log(" ex1.js --help")
-  console.log("")
-  console.log("--help          print this help")
-  console.log("")
+  process.stdout.write("ex1 usage:")
+  process.stdout.write(" ex1.js --file={FILENAME}\n")
+  process.stdout.write("--help          print this help\n")
+  process.stdout.write("--file={FILENAME}          process the file\n")
 }
 
 const args = minimist(process.argv.slice(2), {
@@ -19,7 +22,7 @@ const args = minimist(process.argv.slice(2), {
 function init(args) {
   switch (true) {
     case args.help && args.file !== undefined:
-      console.log(args.file)
+      processFile(path.resolve(args.file))
       yoHelp()
     case args.help:
       // to make it excitable
@@ -27,7 +30,7 @@ function init(args) {
       yoHelp()
       break
     case args.file !== undefined:
-      console.log(args.file)
+      processFile(path.resolve(args.file))
       break
 
     default:
@@ -40,6 +43,11 @@ function error(message, includeHelp = false) {
   if (includeHelp) {
     yoHelp()
   }
+}
+
+function processFile(filePath) {
+  const content = fs.readFileSync(filePath, "utf8")
+  process.stdout.write(content + "\n")
 }
 
 init(args)
