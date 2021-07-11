@@ -3,19 +3,22 @@ import minimist from "minimist"
 import path from "path"
 import {fileURLToPath} from "url"
 import fs from "fs"
+import getStdin from "get-stdin"
+// import util from "util"
+
 const __dirname = fileURLToPath(import.meta.url)
 
 // *********************
 
 function yoHelp() {
-  process.stdout.write("ex1 usage:")
+  process.stdout.write("ex1 usage: \n")
   process.stdout.write(" ex1.js --file={FILENAME}\n")
   process.stdout.write("--help          print this help\n")
   process.stdout.write("--file={FILENAME}          process the file\n")
 }
 
 const args = minimist(process.argv.slice(2), {
-  boolean: ["help"],
+  boolean: ["help", "in"],
   string: ["file"],
 })
 
@@ -24,8 +27,11 @@ function init(args) {
     case args.help && args.file !== undefined:
       processFile(path.resolve(args.file))
       yoHelp()
+    case args.in:
+      getStdin().then(processFile).catch(err)
+      break
     case args.help:
-      // to make it excitable
+      // to make it run
       // run in your shell ➜ chmod u+x ex1.js, if you have a unix shell like bash or zsh
       yoHelp()
       break
@@ -46,7 +52,13 @@ function error(message, includeHelp = false) {
 }
 
 function processFile(filePath) {
-  const content = fs.readFileSync(filePath, "utf8")
+  const content = fs.readFile(filePath, (err, content) => {
+    if (err) {
+      console.error(err.toString())
+    } else {
+      process.stdout.write(content.toString())
+    }
+  })
   process.stdout.write(content + "\n")
 }
 

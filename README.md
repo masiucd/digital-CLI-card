@@ -71,8 +71,7 @@ Note that if we want to use `es-modules` we need to write something like this to
 import path from "path"
 import {fileURLToPath} from "url"
 const __filename = fileURLToPath(import.meta.url)
-console.log({__filename})
-console.log(path.dirname(__filename))
+const __dirname = path.dirname(__filename)
 ```
 
 We can even create new directories.
@@ -83,6 +82,7 @@ import fs from "fs"
 import path from "path"
 import {fileURLToPath} from "url"
 const __filename = fileURLToPath(import.meta.url)
+const __dirname = path.dirname(__filename)
 
 const staticDir = path.join(path.dirname(__filename), "static")
 
@@ -110,7 +110,7 @@ or with `es-modules``
 import path from "path"
 import {fileURLToPath} from "url"
 const __filename = fileURLToPath(import.meta.url)
-express.static(path.join(path.dirname(__filename), "static"))
+const __dirname = path.dirname(__filename)
 ```
 
 lastly we can create new files
