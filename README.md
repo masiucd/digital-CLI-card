@@ -3,7 +3,9 @@
 - [About](#about)
 - [Directory name](#dirname)
 - [Exit](#exit)
+- [Stdin](#stdin)
 - [Resources](#resources)
+- [Streams](#streams)
 
 ## [About](#about)
 
@@ -167,6 +169,36 @@ If we would use `process.exit()` here we would not be able to shut down the proc
 Instead we use the `process.on()` method here to terminate the request when we are done.
 
 > `SIGTERM` is the signal that tells a process to gracefully terminate. It is one of many different signals that are sent from process managers like upstart for example.
+
+---
+
+## [Stdin](#stdin)
+
+Process a file through stdin we can pipe it through the terminal into stdin.
+` cat hello.txt | ./app.js --in`
+Checkout out the command script application in `./cmd-line-scripts/app.js` to see how it works
+
+---
+
+## [Streams](#streams)
+
+We pipe from a readable stream into a writable stream.
+
+```js
+let stream1 // readable
+let stream2 // writable
+
+stream1.pipe(stream2) // we pipe readable stream to a writable stream
+```
+
+And we assign the pipe value into a variable we get back a new readable stream.
+
+```js
+let stream1 // readable
+let stream2 // writable
+
+let anotherReadable = stream1.pipe(stream2) // we pipe readable stream to a writable stream
+```
 
 ---
 

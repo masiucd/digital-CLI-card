@@ -3,17 +3,21 @@ import minimist from "minimist"
 import fs from "fs"
 import path from "path"
 import util from "util"
-import getStdin from "get-stdin"
+import stream from "stream"
 import {fileURLToPath} from "url"
+import zlib from "zlib"
+
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = path.dirname(__filename)
+const {Transform} = stream
 
 // run in your shell ➜ chmod u+x app.js, if you have a unix shell like bash or zsh
 
 const BASE_PATH = path.resolve(process.env.BASE_PATH || __dirname)
+let OUTPATH = path.join(BASE_PATH, "out.txt")
 
 const argv = minimist(process.argv.slice(2), {
-  boolean: ["help", "in"],
+  boolean: ["help", "in", "out", "compress"],
   string: ["file"],
 })
 
@@ -25,16 +29,13 @@ function init(argv) {
     case argv.in || argv._.includes("-"):
       // async
       // ➜ cat hello.txt | ./app.js --in
-      getStdin().then(processFile).catch(error)
+      processFile(process.stdin)
       break
     case argv.file !== undefined:
-      fs.readFile(path.join(BASE_PATH, argv.file), (err, data) => {
-        if (err) {
-          error(err.message.toString())
-        }
-        processFile(data + "\n")
-      })
+      let filePath = fs.createReadStream(path.join(BASE_PATH, argv.file))
+      processFile(filePath)
       break
+
     default:
       error("Incorrect usage", true)
   }
@@ -43,18 +44,56 @@ function init(argv) {
 init(argv)
 
 function help() {
-  print("app cmd script                  usage: \n\n")
-  print("\n")
-  print("--file={FILE_NAME}              process file \n")
-  print("\n")
-  print("--help                          to get some help \n")
-  print("\n")
-  print("--in,                           process stdin\n")
-  print("\n")
+  console.log("app.js usage:")
+  console.log("")
+  console.log("--help                      print this help")
+  console.log("-, --in                     read file from stdin")
+  console.log("--file={FILENAME}           read file from {FILENAME}")
+  console.log("--uncompress                uncompress input file with gzip")
+  console.log("--compress                  compress output with gzip")
+  console.log("--out                       print output")
+  console.log("")
+  console.log("")
 }
 
-function processFile(contents) {
-  print(contents + "\n")
+function processFile(inStream) {
+  let stream = inStream
+  let outStream
+
+  if (argv.uncompress) {
+    let gunzip = zlib.createGunzip()
+    stream = stream.pipe(gunzip)
+  }
+
+  let upperStream = new Transform({
+    /**
+     *
+     * @param {Buffer} chunk
+     * @param {any} enc
+     * @param {()=>void} next
+     */
+    transform(chunk, enc, next) {
+      this.push(chunk.toString().toUpperCase())
+      setTimeout(next, 500)
+      // next()
+    },
+  })
+
+  stream = stream.pipe(upperStream)
+
+  if (argv.compress) {
+    OUTPATH = `${OUTPATH}.gz`
+    let gzipStream = zlib.createGzip()
+    stream = stream.pipe(gzipStream)
+  }
+
+  if (argv.out) {
+    outStream = process.stdout
+  } else {
+    outStream = fs.createWriteStream(OUTPATH)
+  }
+
+  stream.pipe(outStream)
 }
 
 /**
