@@ -4,8 +4,9 @@ import minimist from "minimist"
 function yoHelp() {
   console.log("Welcome to unit converter              ----> ")
   console.log(
-    "Convert one unit to another unit                 ---->  --amount={amount}unit  --unit"
+    "Convert one unit to another unit                 ---->  --amount={amount}{unit}  --unit"
   )
+  console.log("for example                            ---->  --amount=1000kg  --g")
 }
 
 const argv = minimist(process.argv.slice(2), {
@@ -14,22 +15,23 @@ const argv = minimist(process.argv.slice(2), {
 })
 
 const toInt = n => parseInt(n, 10)
+const getLastTwoLetters = s => s.slice(s.length - 2)
+const getLastLetter = s => s.slice(s.length - 1)
+
+const cutString = (s, len) => s.slice(0, len)
 
 const formatInput = str => {
   switch (true) {
-    case str.slice(str.length - 2) === "kg":
-      return str.slice(0, str.length - 2)
-    case str.slice(str.length - 1) === "g":
-      return str.slice(0, str.length - 1)
+    case getLastTwoLetters(str) === "kg":
+      return cutString(str, str.length - 2)
+    case getLastLetter(str) === "g":
+      return cutString(str, str.length - 1)
     default:
       break
   }
 }
 const kgToGram = n => toInt(n) * 1000
-const gramToKg = n => {
-  console.log("n", n)
-  return toInt(n) / 1000
-}
+const gramToKg = n => toInt(n) / 1000
 
 const isValidInput = input => {
   switch (true) {
