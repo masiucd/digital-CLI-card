@@ -1,0 +1,7 @@
+Hello there!
+How are you, today?
+Please leave personal info here:
+Email: {email}
+Name: {fullName} 
+SummersLived: {age}
+

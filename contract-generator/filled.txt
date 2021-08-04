@@ -1,0 +1,7 @@
+Hello there!
+How are you, today?
+Please leave personal info here:
+Email: bob
+Name: lllll 
+SummersLived: 23
+

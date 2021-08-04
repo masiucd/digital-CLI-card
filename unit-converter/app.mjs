@@ -1,6 +1,8 @@
 #! /usr/bin/env node
 import minimist from "minimist"
 
+const LBS_FLOAT = 0.45359237
+
 function yoHelp() {
   console.log("Welcome to unit converter              ----> ")
   console.log(
@@ -19,6 +21,10 @@ const getLastTwoLetters = s => s.slice(s.length - 2)
 const getLastLetter = s => s.slice(s.length - 1)
 
 const cutString = (s, len) => s.slice(0, len)
+const kgToGram = n => toInt(n) * 1000
+const gramToKg = n => toInt(n) / 1000
+const kgToLbs = n => (toInt(n) / LBS_FLOAT).toFixed(4)
+const lbsToKg = n => (toInt(n) * LBS_FLOAT).toFixed(4)
 
 const formatInput = str => {
   switch (true) {
@@ -30,16 +36,14 @@ const formatInput = str => {
       break
   }
 }
-const kgToGram = n => toInt(n) * 1000
-const gramToKg = n => toInt(n) / 1000
 
 const isValidInput = input => {
   switch (true) {
-    case input.slice(input.length - 2) === "kg":
+    case getLastLetter(input) === "kg":
       return true
-    case input.slice(input.length - 2) === "lbs":
+    case getLastLetter(input) === "lbs":
       return true
-    case input.slice(input.length - 1) === "g":
+    case getLastLetter(input) === "g":
       return true
     default:
       return false
