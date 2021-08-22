@@ -13,6 +13,7 @@
   "dependencies": {
     "express": "^4.17.1",
     "get-stdin": "^9.0.0",
-    "minimist": "^1.2.5"
+    "minimist": "^1.2.5",
+    "node-fetch": "^2.6.1"
   }
 }
